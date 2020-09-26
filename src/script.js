@@ -117,12 +117,17 @@ const sendForm = () => {
     let input = form.querySelectorAll('input');
     const clearInput = () => {
       form.innerHTML = formContent;
-      input = form.querySelectorAll('input');
+      input = form.querySelectorAll('input[type="text"]');
       input.forEach((item) => {
         item.value = '';
         item.style.border = '';
       });
-      personalData.checked = false;
+      if (personalData) {
+        personalData.checked = false;
+      }
+      if (club) {
+        [...club].forEach((item) => item.checked = false);
+      }
       mess.remove();
     };
 
@@ -165,7 +170,10 @@ const sendForm = () => {
               ) {
                 form.innerHTML = `<h4>${successMessage}</h4>`;
               }
-              if (form.closest('#banner-form')) {
+              if (
+                form.closest('#banner-form') ||
+                form.closest('#footer_form')
+              ) {
                 successWindow();
               }
             }
@@ -177,9 +185,6 @@ const sendForm = () => {
         if (club) {
           mess.innerHTML = `Не выбран клуб`;
         }
-        if (!form.querySelector('#mess')) {
-          form.append(mess);
-        }
         if (personalData) {
           mess.innerHTML = `Необходимо подтвердить согласие на обработку данных`;
           personalData.addEventListener('change', () => {
@@ -187,6 +192,9 @@ const sendForm = () => {
               mess.remove();
             }
           });
+        }
+        if (!form.querySelector('#mess')) {
+          form.append(mess);
         }
         if (club) {
           [...club].forEach((item) =>
@@ -200,7 +208,6 @@ const sendForm = () => {
       } 
     }
     elemBody.addEventListener('click', (e) => {
-      console.log(e.target);
       if (
         e.target.matches('.close_icon') ||
         e.target.matches('.overlay') ||

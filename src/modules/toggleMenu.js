@@ -33,6 +33,6 @@ elemBody.addEventListener('click', (event) => {
     handlerMenu(document.getElementById('gift'));
   }
 });
-}
+};
 
 export default toggleMenu;

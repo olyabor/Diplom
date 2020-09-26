@@ -11,9 +11,8 @@ const sendForm = () => {
     footerForm = document.getElementById('footer_form'),
     freeVisitForm = document.getElementById('free_visit_form'),
     callbackForm = document.getElementById('callback_form'),
-    overlay = document.querySelector('.overlay'),
-    thanks = document.getElementById('thanks'),
-    elemBody = document.querySelector('body');
+    elemBody = document.querySelector('body'),
+    thanks = document.getElementById('thanks');
 
   let mess = document.createElement('p');
   mess.style = 'color: white';
@@ -73,15 +72,20 @@ const sendForm = () => {
 
     event.preventDefault();
     const isChecked = (element) => element.checked === true;
-    let input = form.querySelectorAll('input');
+    let input = form.querySelectorAll('input[type="text"]');
     const clearInput = () => {
       form.innerHTML = formContent;
-      input = form.querySelectorAll('input');
+      input = form.querySelectorAll('input[type="text"]');
       input.forEach((item) => {
         item.value = '';
         item.style.border = '';
       });
-      personalData.checked = false;
+      if (personalData) {
+        personalData.checked = false;
+      }
+      if (club) {
+        [...club].forEach((item) => (item.checked = false));
+      }
       mess.remove();
     };
 
@@ -124,7 +128,10 @@ const sendForm = () => {
               ) {
                 form.innerHTML = `<h4>${successMessage}</h4>`;
               }
-              if (form.closest('#banner-form')) {
+              if (
+                form.closest('#banner-form') ||
+                form.closest('#footer_form')
+              ) {
                 successWindow();
               }
             }
@@ -136,9 +143,6 @@ const sendForm = () => {
         if (club) {
           mess.innerHTML = `Не выбран клуб`;
         }
-        if (!form.querySelector('#mess')) {
-          form.append(mess);
-        }
         if (personalData) {
           mess.innerHTML = `Необходимо подтвердить согласие на обработку данных`;
           personalData.addEventListener('change', () => {
@@ -146,6 +150,9 @@ const sendForm = () => {
               mess.remove();
             }
           });
+        }
+        if (!form.querySelector('#mess')) {
+          form.append(mess);
         }
         if (club) {
           [...club].forEach((item) =>
