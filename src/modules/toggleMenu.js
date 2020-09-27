@@ -2,8 +2,8 @@ import handlerMenu from './handlerMenu';
 
 const toggleMenu = () => {
   const elemBody = document.querySelector('body'),
-  freeVisitForm = document.getElementById('free_visit_form'),
-  callbackForm = document.getElementById('callback_form');
+    freeVisitForm = document.getElementById('free_visit_form'),
+    callbackForm = document.getElementById('callback_form');
 
 elemBody.addEventListener('click', (event) => {
   const target = event.target;

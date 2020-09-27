@@ -12,6 +12,9 @@ const handlerMenu = (menu) => {
   }
   `;
   menu.classList.toggle('active');
+  document.querySelector('.top-menu').style.cssText = menu.classList.contains('active')
+    ? 'z-index: 0'
+    : 'z-index: 4444';
   document.head.append(style);
 };
 

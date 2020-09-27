@@ -1,4 +1,6 @@
 import handlerMenu from './handlerMenu';
+import calc from './calc';
+import { reset as resetCalc } from './calc';
 
 const sendForm = () => {
   const errorMessage = 'Ошибка',
@@ -61,7 +63,7 @@ const sendForm = () => {
     .forEach((item) => {
       item.required = false;
     });
-
+  
   const sendData = (event) => {
     const form = event.target,
       personalData = form.querySelector(
@@ -87,10 +89,9 @@ const sendForm = () => {
       if (cardCheck) {
         cardCheck.checked = false;
       }
-      if (club) {
-        [...club].forEach((item) => (item.checked = false));
-      }
+      club.forEach(item => item.checked = false);
       mess.remove();
+      resetCalc();
     };
 
     if (valid(input)) {
@@ -109,7 +110,8 @@ const sendForm = () => {
         });
         mess.remove();
         form.innerHTML += `<h4>${loadMessage}</h4>`;
-
+        
+        window.orderData = body;
         postData(body)
           .then((response) => {
             if (response.status !== 200) {
@@ -141,6 +143,7 @@ const sendForm = () => {
               ) {
                 successWindow();
               }
+              calc(body);
             }
           })
           .catch((error) => {
@@ -165,15 +168,13 @@ const sendForm = () => {
         if (!form.querySelector('#mess')) {
           form.append(mess);
         }
-        if (club) {
-          [...club].forEach((item) =>
-            item.addEventListener('change', () => {
-              if (item.checked) {
-                mess.remove();
-              }
-            })
-          );
-        }
+        club.forEach((item) =>
+          item.addEventListener('change', () => {
+            if (item.checked) {
+              mess.remove();
+            }
+          })
+        );
       }
     }
     elemBody.addEventListener('click', (e) => {
@@ -184,6 +185,7 @@ const sendForm = () => {
       ) {
         clearInput();
       }
+      calc(window.orderData);
     });
   };
 
