@@ -1,4 +1,6 @@
 'use strict';
+// import { SliderCarousel } from './modules/sliderCarousel';
+// console.log(SliderCarousel);
 const elemBody = document.querySelector('body'),
   freeVisitForm = document.getElementById('free_visit_form'),
   callbackForm = document.getElementById('callback_form');
@@ -39,7 +41,9 @@ elemBody.addEventListener('click', (event) => {
     elemBody.querySelector('.fixed-gift').style.display = 'none';
     handlerMenu(document.getElementById('gift'));
   }
-  if (target.closest('.close-btn') && target.closest('#thanks')){
+  if (
+    (target.closest('.close-btn') && target.closest('#thanks'))
+  ) {
     handlerMenu(document.getElementById('thanks'));
   }
   if (target.closest('.close-btn') && target.closest('#gift')) {
@@ -104,12 +108,17 @@ const sendForm = () => {
     return flag;
   };
 
-  document.querySelectorAll('.personal-data>input[type="checkbox"]').forEach(item => {item.required = false;});
+  document
+    .querySelectorAll('.personal-data>input[type="checkbox"]')
+    .forEach((item) => {
+      item.required = false;
+    });
 
   const sendData = (event) => {
     const form = event.target,
       personalData = form.querySelector('.personal-data>input[type="checkbox"]'),
       club = form.querySelectorAll('.club>input[type="radio"]'),
+      cardCheck = form.querySelector('#card_check'),
       formContent = form.innerHTML;
 
     event.preventDefault();
@@ -125,8 +134,11 @@ const sendForm = () => {
       if (personalData) {
         personalData.checked = false;
       }
+      if (cardCheck) {
+        cardCheck.checked = false;
+      }
       if (club) {
-        [...club].forEach((item) => item.checked = false);
+        [...club].forEach((item) => (item.checked = false));
       }
       mess.remove();
     };
@@ -137,6 +149,7 @@ const sendForm = () => {
       });
       if (
         (personalData && personalData.checked) ||
+        (cardCheck && cardCheck.checked) ||
         (form.closest('#footer_form') && [...club].some(isChecked))
       ) {
         const formData = new FormData(form);
@@ -158,7 +171,8 @@ const sendForm = () => {
               }
               if (
                 form.closest('#banner-form') ||
-                form.closest('#footer_form')
+                form.closest('#footer_form') ||
+                form.closest('#card_order')
               ) {
                 errorWindow();
               }
@@ -172,7 +186,8 @@ const sendForm = () => {
               }
               if (
                 form.closest('#banner-form') ||
-                form.closest('#footer_form')
+                form.closest('#footer_form') ||
+                form.closest('#card_order')
               ) {
                 successWindow();
               }
@@ -183,13 +198,17 @@ const sendForm = () => {
           });
       } else {
         if (club) {
-          mess.innerHTML = `Не выбран клуб`;
+          mess.innerHTML = `<p style = "color: red;">Не выбран клуб</p>`;
         }
-        if (personalData) {
-          mess.innerHTML = `Необходимо подтвердить согласие на обработку данных`;
-          personalData.addEventListener('change', () => {
-            if (personalData.checked) {
-              mess.remove();
+        if (personalData || cardOrder) {
+          mess.innerHTML = `<p style = "color: red;">Необходимо подтвердить согласие на обработку данных</p>`;
+          [personalData, cardOrder].forEach((item) => {
+            if (item) {
+              item.addEventListener('change', () => {
+                if (item.checked) {
+                  mess.remove();
+                }
+              });
             }
           });
         }
@@ -205,7 +224,7 @@ const sendForm = () => {
             })
           );
         }
-      } 
+      }
     }
     elemBody.addEventListener('click', (e) => {
       if (
@@ -226,7 +245,7 @@ const sendForm = () => {
 
   document.querySelectorAll('input[type=text]').forEach((item) => {
     item.addEventListener('input', () => {
-      item.value = item.value.replace(/[^а-я\s]/gi, '');
+      item.value = item.value.replace(/[^а-я\d\s]/gi, '');
     });
   });
 };
@@ -272,5 +291,112 @@ const mainSlider = () => {
   startSlide(1500);
 };
 mainSlider();
+//
+const gallerySlider = () => {
+  const gallerySlider = document.querySelector('.gallery-slider'),
+    slide = gallerySlider.querySelectorAll('.slide');
+  let currentSlide = 0,
+    interval;
+  
+  document
+    .querySelector('.gallery-bg .wrapper')
+    .insertAdjacentHTML(
+      'afterbegin',
+      `<i class="fa fa-angle-left arrow-left"></i>`
+    );
+  document
+    .querySelector('.gallery-bg .wrapper')
+    .insertAdjacentHTML(
+      'beforeend',
+      `<i class="fa fa-angle-right arrow-right"></i>`
+    );
+  let style = document.getElementById('slider-style');
+  if (!style) {
+    style = document.createElement('style');
+    style.id = 'slider-style';
+  }
+  style.textContent = `
+    .gallery-bg {
+    display: flex;
+    overflow: hidden;
+    margin-top: 70px;
+  }
 
+  .gallery-bg .wrapper{
+    display: flex;
+    align-items: center;
+  }
+
+  .slide {
+    display: none;
+    height: 404px;
+  }
+
+  .active-slide {
+    display: flex;
+    justify-content: center;
+    animation-duration: 2s;
+  }
+
+  .arrow-left, .arrow-right {
+        width: 50px;
+        line-height: 50px;
+        color: #FF7236;
+        font-size: 30px;
+        text-align: center;
+        border-radius: 50%;
+        box-shadow: 0px 2px 12px rgba(173, 152, 143, 0.25);
+  }`;
+  document.head.append(style);
+
+  slide[currentSlide].classList.add('.active-slide');
+  const arrowLeft = document.querySelector('.arrow-left');
+  const arrowRight = document.querySelector('.arrow-right');
+
+  const autoPlaySlide = (direction = 'right') => {
+    slide[currentSlide].classList.remove('active-slide');
+    if (direction === 'left') {
+      currentSlide--;
+      if (currentSlide < 0) {
+        currentSlide = slide.length - 1;
+      }
+    } else {
+      currentSlide++;
+      if (currentSlide >= slide.length) {
+        currentSlide = 0;
+      }
+    }
+    slide[currentSlide].classList.add('active-slide');
+  };
+
+  const startSlide = (time = 3000) => {
+    interval = setInterval(autoPlaySlide, time);
+  };
+
+  const stopSlide = () => {
+    clearInterval(interval);
+  };
+
+  gallerySlider.addEventListener('mouseover', (event) => {
+    if (event.target.closest('.gallery-slider')) {
+      stopSlide();
+    }
+  });
+
+  gallerySlider.addEventListener('mouseout', (event) => {
+    if (event.target.closest('.gallery-slider')) {
+      startSlide();
+    }
+  });
+
+  arrowLeft.addEventListener('click', () => {
+    autoPlaySlide('left');
+  });
+  arrowRight.addEventListener('click', () => {
+    autoPlaySlide('right');
+  });
+
+  startSlide(1500);
+};
+gallerySlider();
 

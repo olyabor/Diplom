@@ -68,11 +68,12 @@ const sendForm = () => {
         '.personal-data>input[type="checkbox"]'
       ),
       club = form.querySelectorAll('.club>input[type="radio"]'),
+      cardCheck = form.querySelector('#card_check'),
       formContent = form.innerHTML;
 
     event.preventDefault();
     const isChecked = (element) => element.checked === true;
-    let input = form.querySelectorAll('input[type="text"]');
+    let input = form.querySelectorAll('input');
     const clearInput = () => {
       form.innerHTML = formContent;
       input = form.querySelectorAll('input[type="text"]');
@@ -82,6 +83,9 @@ const sendForm = () => {
       });
       if (personalData) {
         personalData.checked = false;
+      }
+      if (cardCheck) {
+        cardCheck.checked = false;
       }
       if (club) {
         [...club].forEach((item) => (item.checked = false));
@@ -95,6 +99,7 @@ const sendForm = () => {
       });
       if (
         (personalData && personalData.checked) ||
+        (cardCheck && cardCheck.checked) ||
         (form.closest('#footer_form') && [...club].some(isChecked))
       ) {
         const formData = new FormData(form);
@@ -116,7 +121,8 @@ const sendForm = () => {
               }
               if (
                 form.closest('#banner-form') ||
-                form.closest('#footer_form')
+                form.closest('#footer_form') ||
+                form.closest('#card_order')
               ) {
                 errorWindow();
               }
@@ -130,7 +136,8 @@ const sendForm = () => {
               }
               if (
                 form.closest('#banner-form') ||
-                form.closest('#footer_form')
+                form.closest('#footer_form') ||
+                form.closest('#card_order')
               ) {
                 successWindow();
               }
@@ -141,13 +148,17 @@ const sendForm = () => {
           });
       } else {
         if (club) {
-          mess.innerHTML = `Не выбран клуб`;
+          mess.innerHTML = `<p style = "color: red;">Не выбран клуб</p>`;
         }
-        if (personalData) {
-          mess.innerHTML = `Необходимо подтвердить согласие на обработку данных`;
-          personalData.addEventListener('change', () => {
-            if (personalData.checked) {
-              mess.remove();
+        if (personalData || cardOrder) {
+          mess.innerHTML = `<p style = "color: red;">Необходимо подтвердить согласие на обработку данных</p>`;
+          [personalData, cardOrder].forEach((item) => {
+            if (item) {
+              item.addEventListener('change', () => {
+                if (item.checked) {
+                  mess.remove();
+                }
+              });
             }
           });
         }
@@ -184,7 +195,7 @@ const sendForm = () => {
 
   document.querySelectorAll('input[type=text]').forEach((item) => {
     item.addEventListener('input', () => {
-      item.value = item.value.replace(/[^а-я\s]/gi, '');
+      item.value = item.value.replace(/[^а-я\d\s]/gi, '');
     });
   });
 };
