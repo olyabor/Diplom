@@ -18,7 +18,9 @@ const windowEvents = () => {
   });
 
   window.addEventListener('scroll', () => {
-    const headMainHeight = document.querySelector('.head-main').offsetHeight;
+    const headMainHeight = document.querySelector('.head-main').offsetHeight,
+      breadcrumbs = document.querySelector('.breadcrumbs'),
+      clubs = document.querySelector('#clubs');
     if (window.scrollY > headMainHeight) {
       topMenu.style.position = 'fixed';
       topMenu.style.top = '0';
@@ -30,13 +32,11 @@ const windowEvents = () => {
       topMenu.style.left = 'initial';
     }
     document.querySelector('#totop').style.display =
-      document.querySelector('#clubs').getBoundingClientRect().y <= 0
-        ? 'block'
-        : 'none';
+      (breadcrumbs || clubs).getBoundingClientRect().y <= 0 ? 'block' : 'none';
   });
 
   menuButton.addEventListener('click', () => {
-    popupMenu.style.display = 'block';
+    popupMenu.style.display = 'flex';
   });
 
   popupMenu.addEventListener('click', (event) => {

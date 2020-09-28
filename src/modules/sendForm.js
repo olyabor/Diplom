@@ -6,7 +6,7 @@ const sendForm = () => {
   const errorMessage = 'Ошибка',
     loadMessage = 'Идет отправка',
     successMessage = 'Отправлено',
-    patternPhone = /^\+?\d+$/;
+    patternPhone = /^\+?\d{7,13}$/;
 
   const bannerForm = document.getElementById('banner-form'),
     cardOrder = document.getElementById('card_order'),
@@ -14,7 +14,8 @@ const sendForm = () => {
     freeVisitForm = document.getElementById('free_visit_form'),
     callbackForm = document.getElementById('callback_form'),
     elemBody = document.querySelector('body'),
-    thanks = document.getElementById('thanks');
+    thanks = document.getElementById('thanks'),
+    promo = document.querySelector('input[placeholder="Промокод"]');
 
   let mess = document.createElement('p');
   mess.style = 'color: white';
@@ -63,6 +64,9 @@ const sendForm = () => {
     .forEach((item) => {
       item.required = false;
     });
+  if (promo) {
+    promo.required = false;
+  };
   
   const sendData = (event) => {
     const form = event.target,
@@ -93,7 +97,7 @@ const sendForm = () => {
       mess.remove();
       resetCalc();
     };
-
+    
     if (valid(input)) {
       input.forEach((item) => {
         item.style.border = '';
@@ -109,7 +113,7 @@ const sendForm = () => {
           body[key] = val;
         });
         mess.remove();
-        form.innerHTML += `<h4>${loadMessage}</h4>`;
+        form.innerHTML += `<h4 style = "text-align: center">${loadMessage}</h4>`;
         
         window.orderData = body;
         postData(body)
@@ -119,7 +123,8 @@ const sendForm = () => {
                 form.closest('#callback_form') ||
                 form.closest('#free_visit_form')
               ) {
-                form.innerHTML = `<h4>${errorMessage}</h4>`;
+                form.innerHTML = `<h4>${errorMessage}</h4>
+                <button class="btn close-btn" style = "position: relative; top: 50px;">OK</button>`;
               }
               if (
                 form.closest('#banner-form') ||
@@ -134,7 +139,8 @@ const sendForm = () => {
                 form.closest('#callback_form') ||
                 form.closest('#free_visit_form')
               ) {
-                form.innerHTML = `<h4>${successMessage}</h4>`;
+                form.innerHTML = `<h4>${successMessage}</h4>
+                <button class="btn close-btn" style = "position: relative; top: 50px;">OK</button>`;
               }
               if (
                 form.closest('#banner-form') ||
@@ -150,11 +156,10 @@ const sendForm = () => {
             console.error(error);
           });
       } else {
-        if (club) {
-          mess.innerHTML = `<p style = "color: red;">Не выбран клуб</p>`;
-        }
-        if (personalData || cardOrder) {
-          mess.innerHTML = `<p style = "color: red;">Необходимо подтвердить согласие на обработку данных</p>`;
+        if (club && form.matches('#footer_form')) {
+          mess.innerHTML = `<p style = "color: red; text-align: center;">Не выбран клуб</p>`;
+        } else if (personalData || cardOrder) {
+          mess.innerHTML = `<p style = "color: red; text-align: center">Необходимо подтвердить согласие на обработку данных</p>`;
           [personalData, cardOrder].forEach((item) => {
             if (item) {
               item.addEventListener('change', () => {
@@ -185,7 +190,6 @@ const sendForm = () => {
       ) {
         clearInput();
       }
-      calc(window.orderData);
     });
   };
 
@@ -194,12 +198,6 @@ const sendForm = () => {
   footerForm.addEventListener('submit', sendData);
   callbackForm.addEventListener('submit', sendData);
   freeVisitForm.addEventListener('submit', sendData);
-
-  document.querySelectorAll('input[type=text]').forEach((item) => {
-    item.addEventListener('input', () => {
-      item.value = item.value.replace(/[^а-я\d\s]/gi, '');
-    });
-  });
 };
 
 export default sendForm;

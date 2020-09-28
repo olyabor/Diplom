@@ -61,6 +61,7 @@ class SliderCarousel {
     style.textContent = `
       .glo-slider {
         overflow: hidden !important;
+        position: relative;
       }
       .glo-slider__wrap {
         display: flex !important;
@@ -126,7 +127,7 @@ class SliderCarousel {
         min-width: 50px !important;
         line-height: 50px !important;
         position: absolute;
-        transform: translateY(${- Math.round(this.wrap.clientHeight * 0.5)}px);
+        top: calc(50% - 25px);
         z-index: 99;     
         color: #9400D3;
         font-size: 30px;

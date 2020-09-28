@@ -36,7 +36,7 @@ const calc = (orderData, discount = 0) => {
       },
     ],
   ];
-  if (orderData) {
+  if (orderData && price) {
     const selectedTimeIndex =
       orderData['card-type'] === '1'
         ? 0
