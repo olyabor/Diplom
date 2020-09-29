@@ -10,7 +10,7 @@ const handlerInput = () => {
     }
     if (target.matches('input[type="tel"]')) {
       target.minlength = '7';
-      target.value = target.value.replace(/[^\+?\d{7,13}]/gi, '');
+      target.value = target.value.replace(/[^\+?\d{7,13}]/gi, '').slice(0,13);
     }
   });
 };
