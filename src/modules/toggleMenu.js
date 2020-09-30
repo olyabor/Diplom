@@ -16,25 +16,14 @@ elemBody.addEventListener('click', (event) => {
   if (target.matches('.callback-btn') && !target.closest('#footer_form')) {
     handlerMenu(callbackForm);
   }
-  if (target.matches('.close-btn') || target.closest('.close-form')) {
-    if (target.closest('#callback_form')) {
-      handlerMenu(target.closest('#callback_form'));
-    }
-    if (target.closest('#free_visit_form')) {
-      handlerMenu(target.closest('#free_visit_form'));
-    }
-    if (target.closest('#thanks')) {
-      handlerMenu(document.getElementById('thanks'));
-    }
-    if (target.closest('#gift')) {
-      handlerMenu(document.getElementById('gift'));
-    }
-  } else if (target.matches('.close_icon')) {
-      handlerMenu(target.closest('.popup'));
-  }
-  if (target.closest('.overlay')) {
-    handlerMenu(elemBody.querySelector('.active'));
-  }
+  if (
+    target.matches('.close-btn') ||
+    target.closest('.close-form') ||
+    target.closest('.overlay') ||
+    target.matches('.close_icon')
+  ) {
+    elemBody.querySelectorAll('.active').forEach((item) => handlerMenu(item));
+  } 
   if (target.closest('.fixed-gift')) {
     elemBody.querySelector('.fixed-gift').style.display = 'none';
     handlerMenu(document.getElementById('gift'));
