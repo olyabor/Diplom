@@ -7,7 +7,7 @@ const toggleMenu = () => {
 
 elemBody.addEventListener('click', (event) => {
   const target = event.target;
-  if (target.closest('.club-select')) {
+  if (target.closest('.club-select') && !target.closest('ul')) {
     handlerMenu(target.closest('.club-select').querySelector('ul'));
   }
   if (target.closest('.open-popup')) {

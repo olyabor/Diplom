@@ -1,8 +1,11 @@
 const windowEvents = () => {
   const menuButton = document.querySelector('.top-menu .menu-button'),
     topMenu = document.querySelector('.top-menu'),
-    popupMenu = document.querySelector('.header-main .popup-menu');
+    popupMenu = document.querySelector('.header-main .popup-menu'),
+    totop = document.querySelector('#totop');
 
+  totop.style.display = 'none';
+  
   const burgerMenu = () => {
     if (window.innerWidth <= 768) {
       menuButton.classList.remove('hidden-large');
@@ -13,6 +16,7 @@ const windowEvents = () => {
     }
   };
   burgerMenu();
+  
   window.addEventListener('resize', () => {
     burgerMenu();
   });
@@ -31,7 +35,7 @@ const windowEvents = () => {
       topMenu.style.top = 'initial';
       topMenu.style.left = 'initial';
     }
-    document.querySelector('#totop').style.display =
+    totop.style.display =
       (breadcrumbs || clubs).getBoundingClientRect().y <= 0 ? 'block' : 'none';
   });
 

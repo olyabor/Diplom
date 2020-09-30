@@ -25,21 +25,21 @@ const carousel = new SliderCarousel({
 
   responsive: [
     {
-      breakpoint: 1024,
+      breakpoint: 1200,
       slidesToShow: 4,
     },
     {
-      breakpoint: 768,
+      breakpoint: 1024,
       slidesToShow: 3,
     },
     {
-      breakpoint: 576,
+      breakpoint: 768,
       slidesToShow: 2,
     },
     {
-      breakpoint: 360,
+      breakpoint: 576,
       slidesToShow: 1,
-    }
+    },
   ],
 });
 

@@ -514,5 +514,16 @@
 
 </div>
 <script src="./dist/main.js"></script>
+<script>
+    const headMainHeight = document.querySelector('.head-main').offsetHeight,
+    breadcrumbs = document.querySelector('.breadcrumbs'),
+    clubs = document.querySelector('#clubs');
+    console.log(1);
+    console.log((breadcrumbs || clubs).getBoundingClientRect().y);
+    window.onload(() => {document.querySelector('#totop').style.display = "none";});
+    
+    document.querySelector('#totop').style.display =
+    (breadcrumbs || clubs).getBoundingClientRect().y <= 0 ? 'block' : 'none';
+</script>
 </body>
 </html>
