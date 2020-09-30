@@ -10,6 +10,9 @@ const handlerMenu = (menu) => {
   .active {
     display: flex !important;
   }
+  .clubs-list .active {
+    display: block !important;
+  }
   `;
   menu.classList.toggle('active');
   document.querySelector('.top-menu').style.cssText = menu.classList.contains('active')
