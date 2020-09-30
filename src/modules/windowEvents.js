@@ -16,25 +16,30 @@ const windowEvents = () => {
     }
   };
   burgerMenu();
+
+  const handlerWindowSize = () => {
+    const headMainHeight = document.querySelector('.head-main').offsetHeight;
+    if (window.innerWidth <= 768 && window.scrollY > headMainHeight) {
+      topMenu.style.position = 'fixed';
+        topMenu.style.top = '0';
+        topMenu.style.left = '0';
+        topMenu.style.width = '100%';
+      } else {
+        topMenu.style.position = 'relative';
+        topMenu.style.top = 'initial';
+        topMenu.style.left = 'initial';
+      }
+  };
   
   window.addEventListener('resize', () => {
     burgerMenu();
+    handlerWindowSize();
   });
 
   window.addEventListener('scroll', () => {
-    const headMainHeight = document.querySelector('.head-main').offsetHeight,
-      breadcrumbs = document.querySelector('.breadcrumbs'),
+    const breadcrumbs = document.querySelector('.breadcrumbs'),
       clubs = document.querySelector('#clubs');
-    if (window.scrollY > headMainHeight) {
-      topMenu.style.position = 'fixed';
-      topMenu.style.top = '0';
-      topMenu.style.left = '0';
-      topMenu.style.width = '100%';
-    } else {
-      topMenu.style.position = 'relative';
-      topMenu.style.top = 'initial';
-      topMenu.style.left = 'initial';
-    }
+    handlerWindowSize();
     totop.style.display =
       (breadcrumbs || clubs).getBoundingClientRect().y <= 0 ? 'block' : 'none';
   });
